@@ -2716,8 +2716,6 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<AccUserRoleMap>(entity =>
         {
             entity.ToTable("AccUserRoleMap");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<AccVoucherAuth>(entity =>
@@ -9088,6 +9086,8 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.HospitalOrDoctorAddress).IsUnicode(false);
+            entity.Property(e => e.IsAlterationDone).HasColumnName("isAlterationDone");
+            entity.Property(e => e.IsNeedToAlter).HasColumnName("isNeedToAlter");
             entity.Property(e => e.IsPostAuditDone).HasColumnName("isPostAuditDone");
             entity.Property(e => e.IsPreAuditDone).HasColumnName("isPreAuditDone");
             entity.Property(e => e.IsSentToPreAudit).HasColumnName("isSentToPreAudit");
@@ -9098,6 +9098,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.MobileNo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.NeedToAlterProposedBy)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.NeedToAlterProposedDate).HasColumnType("datetime");
             entity.Property(e => e.NomineeDoc).IsUnicode(false);
             entity.Property(e => e.NomineeDocId)
                 .HasMaxLength(50)

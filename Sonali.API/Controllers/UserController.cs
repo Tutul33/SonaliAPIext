@@ -19,22 +19,7 @@ namespace Sonali.API.Controllers
             _iRepository = userRepository;
             _iDataService = dataService;
         }
-
-        [Authorize]
-        [HttpPost]
-        [Route("CreateUser")]
-        public async Task<UserDTO> CreateUser([FromBody] UserDTO userDTO)
-        {
-            try
-            {
-                return await _iRepository.CreateUser(userDTO);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        
         [Authorize]
         [HttpGet]
         [Route("GetUserList")]
@@ -67,6 +52,21 @@ namespace Sonali.API.Controllers
                 ex.ToString();
             }
             return data;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("UpdateUserRoleMap")]
+        public async Task<List<UserRoleMapDTO>> UpdateUserRoleMap([FromBody] List<UserRoleMapDTO> UserRoleMapDTOs)
+        {
+            try
+            {
+                return await _iRepository.UpdateUserRoleMap(UserRoleMapDTOs);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

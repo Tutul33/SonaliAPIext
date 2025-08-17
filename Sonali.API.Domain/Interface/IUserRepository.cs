@@ -4,6 +4,6 @@ namespace Sonali.API.Domain.Interface
 {
     public interface IUserRepository
     {
-        Task<UserDTO> CreateUser(UserDTO userDTO);
+        Task<List<UserRoleMapDTO>> UpdateUserRoleMap(List<UserRoleMapDTO> userRoleMapDTO);
     }
 }

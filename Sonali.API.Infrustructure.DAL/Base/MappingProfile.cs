@@ -23,6 +23,21 @@ namespace Sonali.API.Infrustructure.DAL.Base
             CreateMap<VoucherReferralDTO, AccVoucherReferral>();
             CreateMap<AccVoucherReferral, VoucherReferralDTO>();
             CreateMap<VoucherUpdateDTO, Accgl2025>();
+            CreateMap<AccUserRoleMap, UserRoleMapDTO>()
+                .BeforeMap((src, dest) =>
+                {
+                    if (src.IsActive == null)
+                        src.IsActive = false;
+                })
+                .AfterMap((src, dest) =>
+                {
+                    dest.UserRoleMapId = src.Id;
+                    dest.RoleName = "Default Role";
+                });
+
+            CreateMap<UserRoleMapDTO, AccUserRoleMap>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserRoleMapId))
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
         }
     }
 }

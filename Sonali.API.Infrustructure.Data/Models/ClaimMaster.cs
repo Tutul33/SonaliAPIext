@@ -184,4 +184,12 @@ public partial class ClaimMaster
     public bool? IsPostAuditDone { get; set; }
 
     public bool? IsSentToPreAudit { get; set; }
+
+    public bool? IsNeedToAlter { get; set; }
+
+    public string? NeedToAlterProposedBy { get; set; }
+
+    public DateTime? NeedToAlterProposedDate { get; set; }
+
+    public bool? IsAlterationDone { get; set; }
 }

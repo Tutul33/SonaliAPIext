@@ -130,22 +130,7 @@ namespace Sonali.API.Controllers
                 ex.ToString();
             }
             return data;
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("SetFinanceAndAccountUserRoleMap")]
-        public async Task<VoucherReferralDTO> SetFinanceAndAccountUserRoleMap([FromBody] VoucherReferralDTO VoucherReferral)
-        {
-            try
-            {
-                return await _iRepository.ReferVoucher(VoucherReferral);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        }      
 
        
     }

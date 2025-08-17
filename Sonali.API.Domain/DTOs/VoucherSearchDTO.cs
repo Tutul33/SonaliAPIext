@@ -14,5 +14,6 @@ namespace Sonali.API.Domain.DTOs
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
         public string VoucherType { get; set; } = "";
+        public string FinanceBankingUser { get; set; } = "";
     }
 }
