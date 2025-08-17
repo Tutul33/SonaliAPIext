@@ -9,7 +9,7 @@ namespace Sonali.API.Domain.DTOs
 {
     public class UserDTO:User
     {
-        public string UserName { get; set; } = "";
-        public string Password { get; set; } = "";
+        public string? PayRoleName { get; set; }
+        public List<UserRoleMapDTO>? roleList { get; set; } = new List<UserRoleMapDTO>();
     }
 }

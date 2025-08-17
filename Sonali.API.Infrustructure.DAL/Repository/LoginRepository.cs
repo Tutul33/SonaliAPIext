@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Sonali.API.Domain.DTOs;
 using Sonali.API.Domain.Interface;
 using Sonali.API.Infrustructure.Data.Data;
@@ -19,7 +20,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public Task<UserDTO> Login(LoginDTO loginDTO)
+        public async Task<UserDTO> Login(LoginDTO loginDTO)
         {
             try
             {
@@ -28,8 +29,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     throw new ArgumentNullException(nameof(loginDTO), "Login data cannot be null");
                 }
                 string hashToStoreInDatabase = BCrypt.Net.BCrypt.HashPassword(loginDTO.Password, BCrypt.Net.BCrypt.GenerateSalt());
-                var user = _dbContext.AppUsers
-                    .FirstOrDefault(u => u.UserName == loginDTO.UserName.ToString().Trim());
+                var user = _dbContext.AppUsers.FirstOrDefault(u => u.UserName == loginDTO.UserName.ToString().Trim());                
                 if (user == null)
                 {
                     throw new UnauthorizedAccessException("Invalid username or password");
@@ -40,13 +40,41 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     throw new UnauthorizedAccessException("Invalid username or password");
                 }
                 user.Password = loginDTO.Password;
-                return Task.FromResult(_mapper.Map<UserDTO>(user));
+
+                List<UserRoleMapDTO> userRoles = GetUserRoleMap(user);
+                var userDto = _mapper.Map<UserDTO>(user);
+                var payRole = _dbContext.PayRoles.FirstOrDefault(u => u.RoleId == user.RoleId);
+                userDto.PayRoleName = payRole?.RoleName ?? string.Empty;
+                userDto.roleList = _mapper.Map<List<UserRoleMapDTO>>(userRoles);
+                //return Task.FromResult(_mapper.Map<UserDTO>(user));
+                return userDto;
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+
+        private List<UserRoleMapDTO> GetUserRoleMap(Data.Models.AppUser user)
+        {
+            var userRoles = _dbContext.AccUserRoleMaps
+                           .Where(urm => urm.UserId == user.Id)
+                           .Join(
+                               _dbContext.AccUserRoles,
+                               urm => urm.RoleId,   // key from AccUserRoleMaps
+                               r => r.Id,          // key from AccUserRoles
+                               (urm, r) => new UserRoleMapDTO
+                               {
+                                   UserRoleMapId = urm.Id,
+                                   UserId = urm.UserId,
+                                   RoleId = r.Id,
+                                   RoleName = r.Name,
+                                   IsActive = urm.IsActive
+                               }
+                           )
+                           .ToList();
+            return userRoles;
         }
     }
 }
