@@ -59,7 +59,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
         private List<UserRoleMapDTO> GetUserRoleMap(Data.Models.AppUser user)
         {
             var userRoles = _dbContext.AccUserRoleMaps
-                           .Where(urm => urm.UserId == user.Id)
+                           .Where(urm => urm.UserId == user.Id && urm.IsActive==true)
                            .Join(
                                _dbContext.AccUserRoles,
                                urm => urm.RoleId,   // key from AccUserRoleMaps
