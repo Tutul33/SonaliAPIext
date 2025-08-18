@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Sonali.API.Utilities\Sonali.API.Utilities.csproj" />
   </ItemGroup>
 
+	<PropertyGroup>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+	</PropertyGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+	<PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,5 +31,10 @@
     <ProjectReference Include="..\Sonali.API.Infrustructure.DAL\Sonali.API.Infrustructure.DAL.csproj" />
     <ProjectReference Include="..\Sonali.API\Sonali.API.csproj" />
   </ItemGroup>
-
+	
+  <ItemGroup>
+	<None Update="xunit.runner.json">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+  </ItemGroup>
 </Project>

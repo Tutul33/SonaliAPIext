@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Sonali.API.Tests.DbFactory;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Sonali.API.Tests.IntegrationTests
 {
-    public class VoucherControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+    public class VoucherControllerIntegrationTests
+        : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public VoucherControllerIntegrationTests(WebApplicationFactory<Program> factory)
+        public VoucherControllerIntegrationTests(CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }
@@ -24,9 +23,11 @@ namespace Sonali.API.Tests.IntegrationTests
             var response = await _client.GetAsync("/api/Voucher/GetVoucherList");
 
             // Assert
-            response.EnsureSuccessStatusCode(); // Status code 200-299
+            response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("list", content); // Simplistic check
+
+            Assert.Contains("V001", content); // Check seeded data
+            Assert.Contains("V002", content);
         }
     }
 }
