@@ -68,5 +68,23 @@ namespace Sonali.API.Controllers
                 throw ex;
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetFinanceAndAccountUsersRole")]
+        public async Task<object?> GetFinanceAndAccountUsersRole()
+        {
+            object? data = null;
+            try
+            {
+                data = await _iDataService.GetFinanceAndAccountUsersRole();
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+            return data;
+        }
+
     }
 }

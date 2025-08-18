@@ -14,5 +14,6 @@ namespace Sonali.API.DomainService.Base
         public const string sp_GetChartOfAccounts = "sp_GetChartOfAccounts";
         public const string sp_GetFinanceAndAccountUsers = "sp_GetFinanceAndAccountUsers";
         public const string sp_GetUsersRoleMap = "sp_GetUsersRoleMap";
+        public const string sp_GetFinanceAndAccountUsersRole = "sp_GetFinanceAndAccountUsersRole";
     }
 }

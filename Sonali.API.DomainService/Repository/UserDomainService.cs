@@ -15,15 +15,18 @@ namespace Sonali.API.DomainService.Repository
     {
         private readonly IGenericFactoryMSSQL<User> _userRepo;
         private readonly IGenericFactoryMSSQL<UserRoleMapDTO> _userRoleMapRepo;
+        private readonly IGenericFactoryMSSQL<UserRoleDTO> _userRoleRepo;
         private readonly ILogger<UserDomainService> _logger;
 
         public UserDomainService(
            IGenericFactoryMSSQL<User> userRepo,
            IGenericFactoryMSSQL<UserRoleMapDTO> userRoleMapRepo,
+           IGenericFactoryMSSQL<UserRoleDTO> userRoleRepo,
            ILogger<UserDomainService> logger)
         {
             _userRepo = userRepo;
             _userRoleMapRepo = userRoleMapRepo;
+            _userRoleRepo = userRoleRepo;
             _logger = logger;
         }
 
@@ -61,6 +64,24 @@ namespace Sonali.API.DomainService.Repository
                     new Dictionary<string, object?>(),
                     StaticInfos.MsSqlConnectionString
                 ) ?? new List<UserRoleMapDTO>();
+
+                return new { list = users };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching finance and banking users role map");
+                throw;
+            }
+        }
+        public async Task<object> GetFinanceAndAccountUsersRole()
+        {
+            try
+            {
+                var users = await _userRoleRepo.ExecuteCommandListAsync(
+                    StoredProcedures.sp_GetFinanceAndAccountUsersRole,
+                    new Dictionary<string, object?>(),
+                    StaticInfos.MsSqlConnectionString
+                ) ?? new List<UserRoleDTO>();
 
                 return new { list = users };
             }

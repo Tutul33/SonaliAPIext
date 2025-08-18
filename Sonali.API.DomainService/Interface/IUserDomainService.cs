@@ -11,5 +11,6 @@ namespace Sonali.API.DomainService.Interface
     {
         Task<object> GetUserList(CommonModel param);
         Task<object> GetUsersRoleMap();
+        Task<object> GetFinanceAndAccountUsersRole();
     }
 }
