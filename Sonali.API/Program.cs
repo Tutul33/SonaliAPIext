@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Sonali.API.DomainService.Base;
 using Sonali.API.Infrustructure.DAL.Base;
@@ -15,7 +16,11 @@ IConfiguration _configuration = configBuilder.Build();
 StaticInfos.MsSqlConnectionString = _configuration.GetValue<string>("MsSqlConnectionString");
 builder.Services.Configure<JwtSettings>(_configuration.GetSection("Jwt"));
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(StaticInfos.MsSqlConnectionString);
+});
+
 ServiceRegister.Register(builder);
 ValidatorRegister.Register(builder);
 
