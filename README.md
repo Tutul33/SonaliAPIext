@@ -210,4 +210,55 @@ Authorization: Bearer <jwt-token>
 ---
 
 This README provides a complete overview and onboarding guide for new developers.
+# Sonali.API Architecture - Unit of Work & CQRS
+
+## Architecture Diagram
+
+```
+                ┌─────────────────────┐
+                │   VoucherController │
+                │  (Thin Controllers) │
+                └─────────┬───────────┘
+                          │
+       ┌──────────────────┴──────────────────┐
+       │                                     │
+       ▼                                     ▼
+┌───────────────┐                     ┌─────────────────────┐
+│DomainService  │                     │ IVoucherRepository  │
+│(Query / Reads)│                     │ (Write / Commands) │
+│ - GetVoucher  │                     │ - UpdateVoucher     │
+│ - GetDetails  │                     │ - UpdateCheckApprove│
+│ - GetCOA      │                     │ - ReferVoucher      │
+└───────┬───────┘                     └─────────┬──────────┘
+        │                                       │
+        ▼                                       ▼
+  Generic ADO.NET Factories               AppDbContext (EF Core)
+  - Execute SPs                           - Tracks changes
+  - Return DTOs                           - SaveChangesAsync() = Unit of Work
+  - Optimized reads                       - Transactional writes
+```
+
+## Key Points
+
+1. **CQRS Separation**
+
+   - **Reads** → DomainService + ADO.NET (optimized, DTOs, SPs)
+   - **Writes** → Repository + EF Core (Insert/Update/Delete)
+
+2. **Unit of Work**
+
+   - EF Core’s `DbContext` automatically tracks changes and ensures **transactional consistency** when `SaveChangesAsync()` is called.
+   - Each controller request uses a scoped DbContext → naturally supports Unit of Work.
+
+3. **Controller is thin**
+
+   - Orchestrates calls to services/repositories.
+   - No business logic here → easy to maintain.
+
+4. **Why MediatR is optional**
+
+   - You already have clear command/query separation.
+   - Adding MediatR would introduce handlers/pipelines, but no new benefits in your current scale.
+
+
 
