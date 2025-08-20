@@ -54,7 +54,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
         {
             try
             {
-                var extingReferList = await _dbContext.AccVoucherReferrals.Where((item) => item.VoucherNo == VoucherNo).ToListAsync();
+                var extingReferList = await _dbContext.AccVoucherReferrals.AsNoTracking().Where((item) => item.VoucherNo == VoucherNo).ToListAsync();
                 foreach (var item in extingReferList)
                 {
                     item.IsActive = false;
@@ -132,7 +132,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
         {
             foreach (var voucher in voucherDTO)
             {
-                var existingVoucher = await _dbContext.Accgl2025s.FirstOrDefaultAsync((item) => item.Id == voucher.Id);
+                var existingVoucher = await _dbContext.Accgl2025s.AsNoTracking().FirstOrDefaultAsync((item) => item.Id == voucher.Id);
                 if (existingVoucher != null)
                 {
                     if (!string.IsNullOrEmpty(voucher.ApprovedBy))
@@ -164,7 +164,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     }
                     else if (voucher.Tag == EntityState.Modified)
                     {
-                        var existingEntity = await _dbContext.Accgl2025s.FirstOrDefaultAsync(e => e.Id == voucher.Id);
+                        var existingEntity = await _dbContext.Accgl2025s.AsNoTracking().FirstOrDefaultAsync(e => e.Id == voucher.Id);
                         if (existingEntity == null)
                         {
                             throw new KeyNotFoundException($"Voucher with ID {voucher.Id} not found.");
@@ -174,7 +174,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     }
                     else if (voucher.Tag == EntityState.Deleted)
                     {
-                        var existingEntity = await _dbContext.Accgl2025s.FirstOrDefaultAsync(e => e.Id == voucher.Id);
+                        var existingEntity = await _dbContext.Accgl2025s.AsNoTracking().FirstOrDefaultAsync(e => e.Id == voucher.Id);
                         if (existingEntity == null)
                         {
                             throw new KeyNotFoundException($"Voucher with ID {voucher.Id} not found.");

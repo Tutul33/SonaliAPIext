@@ -92,7 +92,8 @@ else
 }
 app.UseRouting();
 app.UseCors();
-app.UseMiddleware<JwtMiddleware>(); 
+app.UseMiddleware<JwtMiddleware>();
+app.UseMiddleware<ApiResponseMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

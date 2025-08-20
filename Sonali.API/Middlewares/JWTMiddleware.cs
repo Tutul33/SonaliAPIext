@@ -4,6 +4,7 @@ using Sonali.API.Utilities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 public class JwtMiddleware
 {
@@ -23,8 +24,7 @@ public class JwtMiddleware
         if (!string.IsNullOrEmpty(token))
         {
             var result = await AttachUserToContextAsync(context, token);
-            if (!result) // Token invalid or expired
-                return;  // Stop pipeline here
+            if (!result) return; // Stop pipeline if invalid/expired
         }
 
         await _next(context);
@@ -53,22 +53,32 @@ public class JwtMiddleware
             var claimsIdentity = new ClaimsIdentity(jwtToken.Claims, "jwt");
             context.User = new ClaimsPrincipal(claimsIdentity);
 
-            return true; // Token OK
+            return true; // Token is valid
         }
         catch (SecurityTokenExpiredException)
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync("{\"error\": \"Token expired\"}");
+            await WriteErrorResponse(context, "Token expired", StatusCodes.Status401Unauthorized);
             return false;
         }
         catch (Exception)
-
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync("{\"error\": \"Invalid token\"}");
+            await WriteErrorResponse(context, "Invalid token", StatusCodes.Status401Unauthorized);
             return false;
         }
+    }
+
+    private static async Task WriteErrorResponse(HttpContext context, string message, int statusCode)
+    {
+        context.Response.StatusCode = statusCode;
+        context.Response.ContentType = "application/json";
+
+        var response = ApiResponse<object>.ErrorResponse(message: message);
+
+        var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+
+        await context.Response.WriteAsync(json);
     }
 }

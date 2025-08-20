@@ -29,7 +29,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     throw new ArgumentNullException(nameof(loginDTO), "Login data cannot be null");
                 }
                 string hashToStoreInDatabase = BCrypt.Net.BCrypt.HashPassword(loginDTO.Password, BCrypt.Net.BCrypt.GenerateSalt());
-                var user = _dbContext.AppUsers.FirstOrDefault(u => u.UserName == loginDTO.UserName.ToString().Trim());                
+                var user = await _dbContext.AppUsers.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == loginDTO.UserName.ToString().Trim());                
                 if (user == null)
                 {
                     throw new UnauthorizedAccessException("Invalid username or password");
