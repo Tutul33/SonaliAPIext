@@ -98,3 +98,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+/// <summary>
+///  This partial class is necessary for the WebApplicationFactory to work correctly
+///  This allows WebApplicationFactory<Program> to discover your app for testing purposes of Sonali.API.Tests integration tests
+/// </summary>
+public partial class Program { }

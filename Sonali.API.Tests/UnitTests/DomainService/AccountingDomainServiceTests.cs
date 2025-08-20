@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Sonali.API.Tests.UnitTests.DomainService
 {
@@ -37,16 +38,24 @@ namespace Sonali.API.Tests.UnitTests.DomainService
         [Fact]
         public async Task GetVoucherList_ShouldReturnVouchers()
         {
-            // Arrange
-            _voucherRepoMock
-                .Setup(x => x.ExecuteCommandListAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object?>>(), It.IsAny<string>()))
-                .ReturnsAsync(new List<Voucher> { new Voucher { VoucherNo = "V001" } });
+            try
+            {
+                // Arrange Data
+                _voucherRepoMock
+                    .Setup(x => x.ExecuteCommandListAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, object?>>(), It.IsAny<string>()))
+                    .ReturnsAsync(new List<Voucher> { new Voucher { VoucherNo = "V001" } });
 
-            // Act
-            var result = await _service.GetVoucherList(new VoucherSearchDTO());
+                // Act
+                var result = await _service.GetVoucherList(new VoucherSearchDTO());
 
-            // Assert
-            Assert.NotNull(result);
+                // Assert
+                Assert.NotNull(result);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
