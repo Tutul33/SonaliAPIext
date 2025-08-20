@@ -15,6 +15,7 @@ var configBuilder = new ConfigurationBuilder()
 IConfiguration _configuration = configBuilder.Build();
 StaticInfos.MsSqlConnectionString = _configuration.GetValue<string>("MsSqlConnectionString");
 builder.Services.Configure<JwtSettings>(_configuration.GetSection("Jwt"));
+builder.Services.Configure<FileUploadSettings>(_configuration.GetSection("FileUpload"));
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

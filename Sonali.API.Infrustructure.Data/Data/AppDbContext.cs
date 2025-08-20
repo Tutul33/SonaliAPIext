@@ -42,6 +42,12 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<AccClosingTbl> AccClosingTbls { get; set; }
 
+    public virtual DbSet<AccDemo> AccDemos { get; set; }
+
+    public virtual DbSet<AccDemoItem> AccDemoItems { get; set; }
+
+    public virtual DbSet<AccDemoItemFileAttachment> AccDemoItemFileAttachments { get; set; }
+
     public virtual DbSet<AccDetailTransaction> AccDetailTransactions { get; set; }
 
     public virtual DbSet<AccExpense> AccExpenses { get; set; }
@@ -1880,6 +1886,46 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Amount).HasColumnType("numeric(18, 0)");
             entity.Property(e => e.UserId)
                 .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<AccDemo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Demo");
+
+            entity.ToTable("AccDemo");
+
+            entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<AccDemoItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_DemoItem");
+
+            entity.ToTable("AccDemoItem");
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Title)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<AccDemoItemFileAttachment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_DemoItemFileAttachment");
+
+            entity.ToTable("AccDemoItemFileAttachment");
+
+            entity.Property(e => e.FileName)
+                .HasMaxLength(500)
                 .IsUnicode(false);
         });
 
