@@ -22,6 +22,7 @@ namespace Sonali.API.ServicesRegister
             builder.Services.AddScoped<IAccountingDomainService, AccountingDomainService>();
             builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
             builder.Services.AddScoped<IDemoRepository, DemoRepository>();
+            builder.Services.AddScoped<IDemoDomainService, DemoDomainService>();
 
         }
     }

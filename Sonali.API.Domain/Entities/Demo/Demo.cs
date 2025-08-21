@@ -11,7 +11,6 @@ namespace Sonali.API.Domain.Entities.Demo
     {
         public string Name { get; set; } = "";
         public bool IsActive { get; set; }
-        public DateTime? CreateDate { get; set; }
         public List<DemoItems>? DemoItems { get; set;} = new List<DemoItems>();
     }
 }

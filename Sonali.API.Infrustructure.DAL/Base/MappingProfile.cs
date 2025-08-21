@@ -43,6 +43,12 @@ namespace Sonali.API.Infrustructure.DAL.Base
             //For Demo Mapping
             CreateMap<DemoDTO, AccDemo>();
             CreateMap<AccDemo, DemoDTO>();
+
+            CreateMap<DemoItems, AccDemoItem>();
+            CreateMap<AccDemoItem, DemoItems>();
+
+            CreateMap<DemoItemFileAttachments, AccDemoItemFileAttachment>();
+            CreateMap<AccDemoItemFileAttachment, DemoItemFileAttachments>();
         }
     }
 }

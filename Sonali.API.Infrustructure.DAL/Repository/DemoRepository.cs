@@ -47,6 +47,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
 
 
                 await _dbContext.SaveChangesAsync();
+                demo.Id = demoObj.Id;
                 await UpdateDemoItem(demoObj.Id, demo.DemoItems, files);
 
                 return demo;
@@ -66,8 +67,12 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                     case EntityState.Added:
                         var entity = _mapper.Map<AccDemoItem>(item);
                         entity.DemoId = demoId;
+                        entity.IsActive = true;
                         _dbContext.AccDemoItems.Add(entity);
-                        await _dbContext.SaveChangesAsync(); // ensure Id is generated
+                        await _dbContext.SaveChangesAsync();
+
+                        item.Id = entity.Id;
+                        item.DemoId = demoId;
                         if (entity.Id > 0)
                             await UpdateDemoItemAttachment(entity.Id, item.DemoItemFileAttachments, files);
                         break;
@@ -114,6 +119,9 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                                 IsActive = true
                             };
                             _dbContext.AccDemoItemFileAttachments.Add(entityIn);
+                            await _dbContext.SaveChangesAsync();
+                            att.Id = entityIn.Id; 
+                            att.DemoItemId= demoItemId;
                         }
                         break;
 
@@ -124,6 +132,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                             var newPath = await _fileManager.ReplaceFileAsync(att.FileName, fileUpdate, folder);
                             att.FileName = newPath;
                             _dbContext.AccDemoItemFileAttachments.Update(_mapper.Map<AccDemoItemFileAttachment>(att));
+                            await _dbContext.SaveChangesAsync();
                         }
                         break;
 
@@ -133,12 +142,13 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                         {
                             _fileManager.DeleteFile(entity.FileName);
                             _dbContext.AccDemoItemFileAttachments.Remove(entity);
+                            await _dbContext.SaveChangesAsync();
                         }
                         break;
                 }
             }
 
-            await _dbContext.SaveChangesAsync();
+            
         }
 
     }
