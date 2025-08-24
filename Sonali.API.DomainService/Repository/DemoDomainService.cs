@@ -56,22 +56,26 @@ namespace Sonali.API.DomainService.Repository
                        StaticInfos.MsSqlConnectionString
                    ) ?? new List<DemoDTORequest>();
 
+                if(demoData.Count == 0)
+                {
+                    return demoData;
+                }
                 // Convert flat list to DataTable
                 DataTable dataTable = DataTableHelper.ToDataTable(demoData);
                 DataView view = new DataView(dataTable);
 
                 DataTable _demoData = view.ToTable(
-                    false,
+                    true,
                     "Id", "Name", "CreateDate", "IsActive"
                 );
 
                 DataTable _demoItemData = view.ToTable(
-                    false,
+                    true,
                     "DemoItemId", "Id", "DemoItemName", "RefTo", "DemoItemTitle", "DemoItemDescription", "DemoItemActive"
                 );
 
                 DataTable _demoItemAttchData = view.ToTable(
-                    false,
+                    true,
                     "DAtacchmentId", "DemoItemId", "FileName", "DAttachmentActive"
                 );
                 
@@ -88,6 +92,7 @@ namespace Sonali.API.DomainService.Repository
                         .Select(di => new
                         {
                             Id = di["DemoItemId"],
+                            DemoId= demo["Id"],
                             Name = di["DemoItemName"],
                             RefTo = di["RefTo"],
                             Title = di["DemoItemTitle"],
@@ -99,6 +104,7 @@ namespace Sonali.API.DomainService.Repository
                                 .Select(att => new
                                 {
                                     Id = att["DAtacchmentId"],
+                                    DemoItemId = di["DemoItemId"],
                                     FileName = att["FileName"],
                                     IsActive = att["DAttachmentActive"]
                                 }).ToList()

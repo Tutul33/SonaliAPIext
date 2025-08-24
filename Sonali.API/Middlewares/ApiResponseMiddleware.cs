@@ -17,6 +17,15 @@ namespace Sonali.API.Middlewares
         {
             try
             {
+                // Skip wrapping for static files (like images, css, js)
+                if (context.Request.Path.StartsWithSegments("/uploads") ||
+                    context.Request.Path.StartsWithSegments("/swagger") ||
+                    Path.HasExtension(context.Request.Path))
+                {
+                    await _next(context);
+                    return;
+                }
+
                 // Capture the response body
                 var originalBodyStream = context.Response.Body;
 

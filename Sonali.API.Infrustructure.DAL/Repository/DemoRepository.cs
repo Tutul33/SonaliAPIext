@@ -35,20 +35,23 @@ namespace Sonali.API.Infrustructure.DAL.Repository
             {
                 if (demo == null)
                     throw new ArgumentNullException(nameof(demo), "Demo cannot be null");
-                if (files == null || !files.Any())
-                {
-                    throw new ArgumentException("Files cannot be null or empty", nameof(files));
-                }
+
                 var demoEntity = demo as Demos;// Please explain that
                 var demoObj = _mapper.Map<AccDemo>(demoEntity);
-                demoObj.IsActive = true;
-                demoObj.CreateDate = DateTime.Now;
-                _dbContext.AccDemos.Add(demoObj);
-
+                if (demoObj.Id > 0)
+                {
+                    _dbContext.AccDemos.Update(demoObj);
+                }
+                else
+                {
+                    demoObj.IsActive = true;
+                    demoObj.CreateDate = DateTime.Now;
+                    _dbContext.AccDemos.Add(demoObj);
+                }
 
                 await _dbContext.SaveChangesAsync();
                 demo.Id = demoObj.Id;
-                await UpdateDemoItem(demoObj.Id, demo.DemoItems, files);
+                await ManageDemoItem(demoObj.Id, demo.DemoItems, files);
 
                 return demo;
             }
@@ -58,7 +61,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                 throw;
             }
         }
-        private async Task UpdateDemoItem(int demoId, List<DemoItems> demoItems, List<IFormFile> files)
+        private async Task ManageDemoItem(int demoId, List<DemoItems> demoItems, List<IFormFile> files)
         {
             foreach (var item in demoItems)
             {
@@ -74,7 +77,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                         item.Id = entity.Id;
                         item.DemoId = demoId;
                         if (entity.Id > 0)
-                            await UpdateDemoItemAttachment(entity.Id, item.DemoItemFileAttachments, files);
+                            await ManageDemoItemAttachment(demoId, entity.Id, item.DemoItemFileAttachments, files);
                         break;
 
                     case EntityState.Modified:
@@ -82,7 +85,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                         _dbContext.AccDemoItems.Update(existing);
                         await _dbContext.SaveChangesAsync();
 
-                        await UpdateDemoItemAttachment(existing.Id, item.DemoItemFileAttachments, files);
+                        await ManageDemoItemAttachment(demoId, existing.Id, item.DemoItemFileAttachments, files);
                         break;
 
                     case EntityState.Deleted:
@@ -92,16 +95,16 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                             _dbContext.AccDemoItems.Remove(toDelete);
                             await _dbContext.SaveChangesAsync();
 
-                            await UpdateDemoItemAttachment(item.Id, item.DemoItemFileAttachments, files);
+                            await ManageDemoItemAttachment(demoId, item.Id, item.DemoItemFileAttachments, files);
                         }
                         break;
                 }
             }
         }
 
-        private async Task UpdateDemoItemAttachment(int demoItemId, List<DemoItemFileAttachments> attachments, List<IFormFile> files)
+        private async Task ManageDemoItemAttachment(int demoId, int demoItemId, List<DemoItemFileAttachments> attachments, List<IFormFile> files)
         {
-            string folder = Path.Combine("Demos", demoItemId.ToString());
+            string folder = Path.Combine(Folders.Demo, demoItemId.ToString());
 
             foreach (var att in attachments)
             {
@@ -120,8 +123,8 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                             };
                             _dbContext.AccDemoItemFileAttachments.Add(entityIn);
                             await _dbContext.SaveChangesAsync();
-                            att.Id = entityIn.Id; 
-                            att.DemoItemId= demoItemId;
+                            att.Id = entityIn.Id;
+                            att.DemoItemId = demoItemId;
                         }
                         break;
 
@@ -129,7 +132,8 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                         var fileUpdate = files.FirstOrDefault(f => f.FileName == att.FileName);
                         if (fileUpdate != null)
                         {
-                            var newPath = await _fileManager.ReplaceFileAsync(att.FileName, fileUpdate, folder);
+                            var oldFileName = folder + "\\" + att.FileName;
+                            var newPath = await _fileManager.ReplaceFileAsync(oldFileName, fileUpdate, folder);
                             att.FileName = newPath;
                             _dbContext.AccDemoItemFileAttachments.Update(_mapper.Map<AccDemoItemFileAttachment>(att));
                             await _dbContext.SaveChangesAsync();
@@ -140,7 +144,8 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                         var entity = await _dbContext.AccDemoItemFileAttachments.FindAsync(att.Id);
                         if (entity != null)
                         {
-                            _fileManager.DeleteFile(entity.FileName);
+                            var fileName = folder + "\\" + att.FileName;
+                            _fileManager.DeleteFile(fileName);
                             _dbContext.AccDemoItemFileAttachments.Remove(entity);
                             await _dbContext.SaveChangesAsync();
                         }
@@ -148,6 +153,46 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                 }
             }
 
+
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            try
+            {
+                var demo = await _dbContext.AccDemos.AsNoTracking().FirstOrDefaultAsync(i=>i.Id==id);
+                if (demo == null)
+                    throw new KeyNotFoundException($"Demo with ID {id} not found.");
+
+                _dbContext.AccDemos.Remove(demo);
+
+                var demoItems = await _dbContext.AccDemoItems.AsNoTracking().Where(e => e.DemoId == id).ToListAsync();
+                if (demoItems.Count>0)
+                {
+                    
+                    foreach (var item in demoItems)
+                    {
+                        var demoItemAttachList = await _dbContext.AccDemoItemFileAttachments.AsNoTracking().Where(e => e.DemoItemId == item.Id).ToListAsync();
+                        if (demoItemAttachList.Count>0)
+                        {
+                            _dbContext.AccDemoItemFileAttachments.RemoveRange(demoItemAttachList);
+                        }
+
+                        string folder = Path.Combine(Folders.Demo, item.Id.ToString());
+                        _fileManager.DeleteFolder(folder);
+                    }
+                    
+                    _dbContext.AccDemoItems.RemoveRange(demoItems);
+                }
+
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
             
         }
 

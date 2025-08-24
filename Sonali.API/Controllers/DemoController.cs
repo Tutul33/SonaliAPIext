@@ -45,8 +45,8 @@ namespace Sonali.API.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("getDemoList")]
-        public async Task<object?> getDemoList()
+        [Route("GetDemoList")]
+        public async Task<object?> GetDemoList()
         {
             object? data = null;
             try
@@ -60,10 +60,10 @@ namespace Sonali.API.Controllers
             return data;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
-        [Route("getDemoById")]
-        public async Task<object?> getDemoById([FromQuery] int id)
+        [Route("GetDemoById")]
+        public async Task<object?> GetDemoById([FromQuery] int id)
         {
             object? data = null;
             try
@@ -77,5 +77,20 @@ namespace Sonali.API.Controllers
             return data;
         }
 
+        [Authorize]
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<bool> Delete(int id)
+        {
+            try
+            {
+                return await _demoRepo.Delete(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

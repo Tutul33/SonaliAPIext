@@ -57,7 +57,8 @@ namespace Sonali.API.Utilities.FileManagement
                     await file.CopyToAsync(stream);
                 }
 
-                uploadedPaths.Add(Path.Combine(relativeFolderPath, fileName));
+                //uploadedPaths.Add(Path.Combine(relativeFolderPath, fileName));
+                uploadedPaths.Add(fileName);
             }
 
             return uploadedPaths;
@@ -83,7 +84,18 @@ namespace Sonali.API.Utilities.FileManagement
 
             var fullPath = Path.Combine(BasePath, relativePath);
             if (File.Exists(fullPath))
-                File.Delete(fullPath);
+                File.Delete(fullPath);//Delete File
+        }
+        public void DeleteFolder(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+                return;
+
+            var fullPath = Path.Combine(BasePath, relativePath);
+            if (Directory.Exists(fullPath))
+            {
+                Directory.Delete(fullPath, recursive: true); // deletes folder + all contents
+            }
         }
     }
 }

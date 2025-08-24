@@ -12,6 +12,7 @@ namespace Sonali.API.Utilities.FileManagement
         Task<List<string>> UploadFilesAsync(List<IFormFile> files, string relativeFolderPath);
         Task<string> ReplaceFileAsync(string oldRelativePath, IFormFile newFile, string relativeFolderPath);
         void DeleteFile(string relativePath);
+        void DeleteFolder(string relativePath);
         string BasePath { get; }
     }
 }

@@ -12,5 +12,6 @@ namespace Sonali.API.Domain.Interface
     public interface IDemoRepository
     {
         Task<DemoDTO> Save(DemoDTO demo, List<IFormFile> files);
+        Task<bool> Delete(int id);
     }
 }

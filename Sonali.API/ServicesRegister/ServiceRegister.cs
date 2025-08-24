@@ -5,6 +5,7 @@ using Sonali.API.DomainService.Repository;
 using Sonali.API.Infrustructure.DAL.Repository;
 using Sonali.API.Middlewares;
 using Sonali.API.Utilities.FileManagement;
+using Sonali.API.Utilities.ReportManagement;
 
 namespace Sonali.API.ServicesRegister
 {
@@ -13,6 +14,7 @@ namespace Sonali.API.ServicesRegister
         public static void Register(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IFileManager, FileManager>();
+            builder.Services.AddScoped<IRdlcService, RdlcService>();
             builder.Services.AddScoped(typeof(IGenericFactoryMSSQL<>), typeof(GenericFactoryMSSQL<>));
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
