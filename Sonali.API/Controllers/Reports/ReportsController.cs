@@ -13,85 +13,12 @@ namespace Sonali.API.Controllers.Reports
     public class ReportsController : ControllerBase
     {
         private readonly IRdlcService _rdlcService;
+        private readonly IWebHostEnvironment _env;
 
-        public ReportsController(IRdlcService rdlcService)
+        public ReportsController(IRdlcService rdlcService, IWebHostEnvironment env)
         {
             _rdlcService = rdlcService;
-        }
-
-        [HttpPost("ShowReports1")]
-        public async Task<object> ShowReports1([FromBody] JsonElement data)
-        {
-            JObject jObject = JObject.Parse(data.ToString());
-
-            string reportType = jObject["reportType"]?.ToString() ?? "";
-            string reportName = jObject["reportName"]?.ToString() ?? "";
-            string dataJson = jObject["data"]?.ToString() ?? "";
-            string parametersJson = jObject["params"]?.ToString() ?? "";
-            string dataSetName = jObject["dataSetName"]?.ToString() ?? "";
-
-            // Convert dataJson to DataTable
-            DataTable dataTable = new DataTable();
-            if (!string.IsNullOrEmpty(dataJson))
-            {
-                try
-                {
-                    dataTable = JsonConvert.DeserializeObject<DataTable>(dataJson);
-                    dataTable.TableName = dataSetName; // important for RDLC binding
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"Invalid data format for DataTable: {ex.Message}");
-                }
-            }
-
-            // Convert paramsJson to Dictionary<string, object>
-            var paramsObj = new Dictionary<string, object>();
-
-            if (!string.IsNullOrEmpty(parametersJson))
-            {
-                try
-                {
-                    JArray paramArray = JArray.Parse(parametersJson);
-                    foreach (JObject obj in paramArray)
-                    {
-                        var key = obj["key"]?.ToString();
-                        var value = obj["value"]?.ToString();
-
-                        if (!string.IsNullOrEmpty(key))
-                        {
-                            paramsObj[key] = value ?? string.Empty;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"Invalid params format: {ex.Message}");
-                }
-            }
-
-            // Build Report Path (use reportName if dynamic)
-            string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RDLC",
-                                             string.IsNullOrEmpty(reportName) ? "Sample.rdlc" : reportName);
-
-            if (!System.IO.File.Exists(reportPath))
-                return NotFound($"Report file not found: {reportPath}");
-
-            //  Export RDLC
-            var fileContent = _rdlcService.ExportReport(reportPath, dataTable, reportType, dataSetName, paramsObj);
-
-            //  Save PDF file
-            string saveFolder = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "Pdf");
-            if (!Directory.Exists(saveFolder))
-                Directory.CreateDirectory(saveFolder);
-
-            string fileName = $"Report_{DateTime.Now:yyyyMMddHHmmss}.pdf";
-            string fullPath = Path.Combine(saveFolder, fileName);
-
-            System.IO.File.WriteAllBytes(fullPath, fileContent);
-
-            // Return only PDF file name
-            return Ok(new { fileName });
+            _env = env;
         }
 
         [HttpPost("ShowReports")]
@@ -111,8 +38,7 @@ namespace Sonali.API.Controllers.Reports
             {
                 try
                 {
-                    dataTable = JsonConvert.DeserializeObject<DataTable>(dataJson);
-                    dataTable.TableName = dataSetName;
+                    dataTable = await _rdlcService.PrepareDataFromJSON(dataJson, dataSetName);
                 }
                 catch (Exception ex)
                 {
@@ -126,17 +52,7 @@ namespace Sonali.API.Controllers.Reports
             {
                 try
                 {
-                    JArray paramArray = JArray.Parse(parametersJson);
-                    foreach (JObject obj in paramArray)
-                    {
-                        var key = obj["key"]?.ToString();
-                        var value = obj["value"]?.ToString();
-
-                        if (!string.IsNullOrEmpty(key))
-                        {
-                            paramsObj[key] = value ?? string.Empty;
-                        }
-                    }
+                    await _rdlcService.PrepareParameter(parametersJson, paramsObj);
                 }
                 catch (Exception ex)
                 {
@@ -186,5 +102,33 @@ namespace Sonali.API.Controllers.Reports
             return Ok(new { fileName, reportType = extension });
         }
 
+        [HttpGet("download/{fileType}/{fileName}")]
+        public IActionResult DownloadReport(string fileType, string fileName)
+        {
+            try
+            {
+                // Full path
+                var filePath = Path.Combine(_env.ContentRootPath, "Reports", fileType, fileName);
+
+                if (!System.IO.File.Exists(filePath))
+                    return NotFound("File not found");
+
+                // Get bytes
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                // Determine content type
+                string contentType = fileName.EndsWith(".pdf") ? "application/pdf" :
+                                     fileName.EndsWith(".docx") ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" :
+                                     fileName.EndsWith(".xlsx") ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" :
+                                     "application/octet-stream";
+
+                return File(fileBytes, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
