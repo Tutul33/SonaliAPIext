@@ -61,8 +61,7 @@ namespace Sonali.API.Controllers.Reports
             }
 
             // Build Report Path
-            string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RDLC",
-                                             string.IsNullOrEmpty(reportName) ? "Sample.rdlc" : reportName);
+            string reportPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports", "RDLC", reportName+".rdlc");
 
             if (!System.IO.File.Exists(reportPath))
                 return NotFound($"Report file not found: {reportPath}");
