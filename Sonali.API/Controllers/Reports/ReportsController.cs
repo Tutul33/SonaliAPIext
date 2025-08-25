@@ -93,7 +93,7 @@ namespace Sonali.API.Controllers.Reports
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);
 
-            string fileName = $"Report_{DateTime.Now:yyyyMMddHHmmss}.{extension}";
+            string fileName = $"{reportName}_{DateTime.Now:yyyyMMddHHmmss}.{extension}";
             string fullPath = Path.Combine(saveFolder, fileName);
 
             System.IO.File.WriteAllBytes(fullPath, fileContent);
