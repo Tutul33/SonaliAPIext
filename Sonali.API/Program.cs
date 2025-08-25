@@ -3,7 +3,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Sonali.API.DomainService.Base;
 using Sonali.API.Infrustructure.DAL.Base;
+using Sonali.API.Infrustructure.Data.Configurations;
 using Sonali.API.Infrustructure.Data.Data;
+using Sonali.API.Infrustructure.Data.Services;
 using Sonali.API.Middlewares;
 using Sonali.API.ServicesRegister;
 using Sonali.API.Utilities;
@@ -15,6 +17,7 @@ var configBuilder = new ConfigurationBuilder()
 
 IConfiguration _configuration = configBuilder.Build();
 StaticInfos.MsSqlConnectionString = _configuration.GetValue<string>("MsSqlConnectionString");
+ReportFileSettings.BasePath = _configuration.GetValue<string>("ReportFile:BasePath");
 builder.Services.Configure<JwtSettings>(_configuration.GetSection("Jwt"));
 builder.Services.Configure<FileUploadSettings>(_configuration.GetSection("FileUpload"));
 // Add services to the container.
@@ -79,6 +82,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<MappingProfile>();
 });
 
+builder.Services.Configure<TempFileCleanupSettings>(builder.Configuration.GetSection("TempFileCleanup"));
+builder.Services.AddHostedService<TempFileCleanupService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -104,8 +110,8 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Reports", "PDF")),
+    //FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Reports", "PDF")),
+    FileProvider = new PhysicalFileProvider(Path.Combine(ReportFileSettings.BasePath, "PDF")),
     RequestPath = "/reports/pdf"
 });
 

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Reports\PDF\**" />
+    <Content Remove="Reports\PDF\**" />
+    <EmbeddedResource Remove="Reports\PDF\**" />
+    <None Remove="Reports\PDF\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
@@ -26,7 +33,15 @@
 
   <ItemGroup>
     <Folder Include="Reports\RDLC\" />
-    <Folder Include="Reports\PDF\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reports\RDLC\Sample.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\XSD\Sp_DataPrint.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 	<PropertyGroup>

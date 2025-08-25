@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Sonali.API.Utilities;
 using Sonali.API.Utilities.ReportManagement;
 using System.Data;
 using System.Text.Json;
@@ -14,7 +16,6 @@ namespace Sonali.API.Controllers.Reports
     {
         private readonly IRdlcService _rdlcService;
         private readonly IWebHostEnvironment _env;
-
         public ReportsController(IRdlcService rdlcService, IWebHostEnvironment env)
         {
             _rdlcService = rdlcService;
@@ -88,7 +89,8 @@ namespace Sonali.API.Controllers.Reports
                 _ => "bin"
             };
 
-            string saveFolder = Path.Combine(Directory.GetCurrentDirectory(), "Reports", extension.ToUpperInvariant());
+            //string saveFolder = Path.Combine(Directory.GetCurrentDirectory(), "Reports", extension.ToUpperInvariant());
+            string saveFolder = Path.Combine(ReportFileSettings.BasePath, extension.ToUpperInvariant());
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);
 
@@ -107,7 +109,8 @@ namespace Sonali.API.Controllers.Reports
             try
             {
                 // Full path
-                var filePath = Path.Combine(_env.ContentRootPath, "Reports", fileType, fileName);
+                //var filePath = Path.Combine(_env.ContentRootPath, "Reports", fileType, fileName);
+                var filePath = Path.Combine(ReportFileSettings.BasePath, fileType, fileName);
 
                 if (!System.IO.File.Exists(filePath))
                     return NotFound("File not found");

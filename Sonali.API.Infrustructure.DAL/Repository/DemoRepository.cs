@@ -125,6 +125,7 @@ namespace Sonali.API.Infrustructure.DAL.Repository
                             await _dbContext.SaveChangesAsync();
                             att.Id = entityIn.Id;
                             att.DemoItemId = demoItemId;
+                            att.FileName = entityIn.FileName;
                         }
                         break;
 
