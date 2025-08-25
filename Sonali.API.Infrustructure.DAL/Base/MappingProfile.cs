@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Sonali.API.Domain.DTOs;
+using Sonali.API.Domain.DTOs.DemoDTO;
 using Sonali.API.Domain.Entities;
+using Sonali.API.Domain.Entities.Demo;
 using Sonali.API.Infrustructure.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,15 @@ namespace Sonali.API.Infrustructure.DAL.Base
             CreateMap<UserRoleMapDTO, AccUserRoleMap>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserRoleMapId))
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
+            //For Demo Mapping
+            CreateMap<DemoDTO, AccDemo>();
+            CreateMap<AccDemo, DemoDTO>();
+
+            CreateMap<DemoItems, AccDemoItem>();
+            CreateMap<AccDemoItem, DemoItems>();
+
+            CreateMap<DemoItemFileAttachments, AccDemoItemFileAttachment>();
+            CreateMap<AccDemoItemFileAttachment, DemoItemFileAttachments>();
         }
     }
 }

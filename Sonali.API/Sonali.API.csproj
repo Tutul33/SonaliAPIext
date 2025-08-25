@@ -11,6 +11,7 @@
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.13.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
   </ItemGroup>
@@ -21,6 +22,11 @@
     <ProjectReference Include="..\Sonali.API.Infrustructure.DAL\Sonali.API.Infrustructure.DAL.csproj" />
     <ProjectReference Include="..\Sonali.API.Infrustructure.Data\Sonali.API.Infrustructure.Data.csproj" />
     <ProjectReference Include="..\Sonali.API.Utilities\Sonali.API.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Reports\RDLC\" />
+    <Folder Include="Reports\PDF\" />
   </ItemGroup>
 
 	<PropertyGroup>

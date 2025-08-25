@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Sonali.API.DomainService.Base;
 using Sonali.API.Infrustructure.DAL.Base;
@@ -15,6 +16,7 @@ var configBuilder = new ConfigurationBuilder()
 IConfiguration _configuration = configBuilder.Build();
 StaticInfos.MsSqlConnectionString = _configuration.GetValue<string>("MsSqlConnectionString");
 builder.Services.Configure<JwtSettings>(_configuration.GetSection("Jwt"));
+builder.Services.Configure<FileUploadSettings>(_configuration.GetSection("FileUpload"));
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -88,8 +90,25 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseDefaultFiles();
+    //This is for serving static files. index.html will be served as default file
     app.UseStaticFiles();
+   
 }
+//Now is there any problem to serve files outside wwwroot folder?
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+    builder.Configuration.GetValue<string>("FileUpload:BasePath")),
+    RequestPath = "/uploads"
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Reports", "PDF")),
+    RequestPath = "/reports/pdf"
+});
+
 app.UseRouting();
 app.UseCors();
 app.UseMiddleware<JwtMiddleware>();
