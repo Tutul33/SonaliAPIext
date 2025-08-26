@@ -10,6 +10,7 @@ namespace Sonali.API.Utilities
     {
         public string BasePath { get; set; } = string.Empty;
         public int MaxFileSizeMB { get; set; } = 10;
+        public int FileDeleteDelayInSeconds { get; set; } = 5;
         public List<string> AllowedExtensions { get; set; } = new List<string>();
     }
 

@@ -23,78 +23,133 @@ namespace Sonali.API.Utilities.FileManagement
 
         private void ValidateFile(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                throw new ArgumentException("File is empty.");
+            try
+            {
+                if (file == null || file.Length == 0)
+                    throw new ArgumentException("File is empty.");
 
-            var extension = Path.GetExtension(file.FileName).ToLower();
-            if (!_settings.AllowedExtensions.Contains(extension))
-                throw new ArgumentException($"File type '{extension}' not allowed.");
+                var extension = Path.GetExtension(file.FileName).ToLower();
+                if (!_settings.AllowedExtensions.Contains(extension))
+                    throw new ArgumentException($"File type '{extension}' not allowed.");
 
-            if (file.Length > _settings.MaxFileSizeMB * 1024 * 1024)
-                throw new ArgumentException($"File exceeds max size of {_settings.MaxFileSizeMB} MB.");
+                if (file.Length > _settings.MaxFileSizeMB * 1024 * 1024)
+                    throw new ArgumentException($"File exceeds max size of {_settings.MaxFileSizeMB} MB.");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<string>> UploadFilesAsync(List<IFormFile> files, string relativeFolderPath)
         {
-            if (files == null || !files.Any())
-                throw new ArgumentException("No files to upload");
-
-            var fullFolderPath = Path.Combine(BasePath, relativeFolderPath);
-            if (!Directory.Exists(fullFolderPath))
-                Directory.CreateDirectory(fullFolderPath);
-
-            var uploadedPaths = new List<string>();
-
-            foreach (var file in files)
+            try
             {
-                ValidateFile(file);
+                if (files == null || !files.Any())
+                    throw new ArgumentException("No files to upload");
 
-                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                var filePath = Path.Combine(fullFolderPath, fileName);
+                var fullFolderPath = Path.Combine(BasePath, relativeFolderPath);
+                if (!Directory.Exists(fullFolderPath))
+                    Directory.CreateDirectory(fullFolderPath);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var uploadedPaths = new List<string>();
+
+                foreach (var file in files)
                 {
-                    await file.CopyToAsync(stream);
+                    ValidateFile(file);
+
+                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                    var filePath = Path.Combine(fullFolderPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    //uploadedPaths.Add(Path.Combine(relativeFolderPath, fileName));
+                    uploadedPaths.Add(fileName);
                 }
 
-                //uploadedPaths.Add(Path.Combine(relativeFolderPath, fileName));
-                uploadedPaths.Add(fileName);
+                return uploadedPaths;
             }
+            catch (Exception ex)
+            {
 
-            return uploadedPaths;
+                throw ex;
+            }
         }
 
         public async Task<string> ReplaceFileAsync(string oldRelativePath, IFormFile newFile, string relativeFolderPath)
         {
-            // Delete old file
-            if (!string.IsNullOrEmpty(oldRelativePath))
+            try
             {
-                DeleteFile(oldRelativePath);
-            }
+                // Delete old file
+                if (!string.IsNullOrEmpty(oldRelativePath))
+                {
+                    DeleteFile(oldRelativePath);
+                }
 
-            // Upload new file
-            var uploaded = await UploadFilesAsync(new List<IFormFile> { newFile }, relativeFolderPath);
-            return uploaded.First();
+                // Upload new file
+                var uploaded = await UploadFilesAsync(new List<IFormFile> { newFile }, relativeFolderPath);
+                return uploaded.First();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public void DeleteFile(string relativePath)
         {
-            if (string.IsNullOrEmpty(relativePath))
-                return;
+            try
+            {
+                if (string.IsNullOrEmpty(relativePath))
+                    return;
 
-            var fullPath = Path.Combine(BasePath, relativePath);
-            if (File.Exists(fullPath))
-                File.Delete(fullPath);//Delete File
+                var fullPath = Path.Combine(BasePath, relativePath);
+
+                if (!File.Exists(fullPath))
+                    return;
+
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    if (File.Exists(fullPath))
+                        File.Delete(fullPath);
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
         public void DeleteFolder(string relativePath)
         {
-            if (string.IsNullOrEmpty(relativePath))
-                return;
-
-            var fullPath = Path.Combine(BasePath, relativePath);
-            if (Directory.Exists(fullPath))
+            try
             {
-                Directory.Delete(fullPath, recursive: true); // deletes folder + all contents
+                if (string.IsNullOrEmpty(relativePath))
+                    return;
+
+                var fullPath = Path.Combine(BasePath, relativePath);
+
+                if (!Directory.Exists(fullPath))
+                    return;
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    if (Directory.Exists(fullPath))
+                    {
+                        Directory.Delete(fullPath, recursive: true);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
             }
         }
     }

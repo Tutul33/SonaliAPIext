@@ -1,4 +1,5 @@
 ﻿using Sonali.API.Utilities;
+using Sonali.API.Utilities.FileManagement;
 using System.Net;
 using System.Text.Json;
 
@@ -70,6 +71,18 @@ namespace Sonali.API.Middlewares
                 context.Response.ContentType = "application/json";
                 context.Response.Body = originalBodyStream;
                 var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                await context.Response.WriteAsync(json);
+            }
+            catch (FileValidationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = ApiResponse<object>.ErrorResponse(
+                    message: ex.Message
+                );
+
+                var json = JsonSerializer.Serialize(errorResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                 await context.Response.WriteAsync(json);
             }
             catch (Exception ex)

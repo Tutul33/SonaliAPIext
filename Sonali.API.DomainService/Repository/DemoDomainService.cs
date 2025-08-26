@@ -100,7 +100,7 @@ namespace Sonali.API.DomainService.Repository
                             IsActive = di["DemoItemActive"],
 
                             DemoItemFileAttachments = _demoItemAttchData.AsEnumerable()
-                                .Where(att => att["DemoItemId"].ToString() == di["DemoItemId"].ToString())
+                                .Where(att => att["DemoItemId"].ToString() == di["DemoItemId"].ToString() && att["DAtacchmentId"].ToString()!="0")
                                 .Select(att => new
                                 {
                                     Id = att["DAtacchmentId"],
