@@ -27,22 +27,22 @@ namespace Sonali.API.Middlewares
                     var fileSizeMB = file.Length / (1024.0 * 1024.0);
                     if (fileSizeMB > _settings.MaxFileSizeMB)
                     {
-                        //context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        //await context.Response.WriteAsync(
-                        //    $"File '{file.FileName}' exceeds the allowed size of {_settings.MaxFileSizeMB} MB.");
-                        //return; // stop pipeline
-                        throw new FileValidationException($"File '{file.FileName}' exceeds the allowed size of {_settings.MaxFileSizeMB} MB.");
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync(
+                            $"File '{file.FileName}' exceeds the allowed size of {_settings.MaxFileSizeMB} MB.");
+                        return; // stop pipeline
+                        //throw new FileValidationException($"File '{file.FileName}' exceeds the allowed size of {_settings.MaxFileSizeMB} MB.");
                     }
 
                     //Extension check
                     var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
                     if (!_settings.AllowedExtensions.Contains(ext))
                     {
-                        //context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                        //await context.Response.WriteAsync(
-                        //    $"File '{file.FileName}' has invalid extension. Allowed: {string.Join(", ", _settings.AllowedExtensions)}");
-                        //return;
-                        throw new FileValidationException($"File '{file.FileName}' has invalid extension. Allowed: {string.Join(", ", _settings.AllowedExtensions)}");
+                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                        await context.Response.WriteAsync(
+                            $"File '{file.FileName}' has invalid extension. Allowed: {string.Join(", ", _settings.AllowedExtensions)}");
+                        return;
+                        //throw new FileValidationException($"File '{file.FileName}' has invalid extension. Allowed: {string.Join(", ", _settings.AllowedExtensions)}");
                     }
                 }
             }

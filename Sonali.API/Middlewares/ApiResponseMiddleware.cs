@@ -1,7 +1,8 @@
 ﻿using Sonali.API.Utilities;
-using Sonali.API.Utilities.FileManagement;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Net;
-using System.Text.Json;
 
 namespace Sonali.API.Middlewares
 {
@@ -40,7 +41,7 @@ namespace Sonali.API.Middlewares
                 var bodyText = await new StreamReader(context.Response.Body).ReadToEndAsync();
                 context.Response.Body.Seek(0, SeekOrigin.Begin);
 
-                // If status code >= 400, wrap as error, otherwise success
+                // Wrap response using ApiResponse
                 object? result;
                 if (context.Response.StatusCode >= 400)
                 {
@@ -50,13 +51,12 @@ namespace Sonali.API.Middlewares
                 }
                 else
                 {
-                    // Try to deserialize JSON if body exists, otherwise null
                     object? data = null;
                     if (!string.IsNullOrWhiteSpace(bodyText))
                     {
                         try
                         {
-                            data = JsonSerializer.Deserialize<object>(bodyText, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            data = JsonConvert.DeserializeObject<object>(bodyText);
                         }
                         catch
                         {
@@ -70,19 +70,13 @@ namespace Sonali.API.Middlewares
                 // Write the wrapped response
                 context.Response.ContentType = "application/json";
                 context.Response.Body = originalBodyStream;
-                var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-                await context.Response.WriteAsync(json);
-            }
-            catch (FileValidationException ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.ContentType = "application/json";
 
-                var errorResponse = ApiResponse<object>.ErrorResponse(
-                    message: ex.Message
-                );
+                var json = JsonConvert.SerializeObject(result, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    NullValueHandling = NullValueHandling.Ignore
+                });
 
-                var json = JsonSerializer.Serialize(errorResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                 await context.Response.WriteAsync(json);
             }
             catch (Exception ex)
@@ -95,7 +89,12 @@ namespace Sonali.API.Middlewares
                     errors: new List<string> { ex.StackTrace ?? string.Empty }
                 );
 
-                var json = JsonSerializer.Serialize(errorResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                var json = JsonConvert.SerializeObject(errorResponse, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
                 await context.Response.WriteAsync(json);
             }
         }

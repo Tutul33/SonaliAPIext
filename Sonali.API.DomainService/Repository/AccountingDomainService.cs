@@ -93,11 +93,12 @@ namespace Sonali.API.DomainService.Repository
                     true,
                     "ReferralId", "RefBy", "RefTo", "RefType", "Comments", "ReferDate", "IsActive"
                     );
-                
+                var voucherList = DataTableHelper.DataTableToList<VoucherDtl>(_voucherData);
+                var referralList = DataTableHelper.DataTableToList<VoucherReferralDTO>(_referData);
                 return new
                 {
-                    voucherList = DataTableHelper.DataTableToList<VoucherDtl>(_voucherData),
-                    referralList = DataTableHelper.DataTableToList<VoucherReferralDTO>(_referData)
+                    voucherList = voucherList.Count>0 ? voucherList : new List<VoucherDtl>(),
+                    referralList = referralList.Count>0 ? referralList : new List<VoucherReferralDTO>()
                 };
             }
             catch (Exception ex)

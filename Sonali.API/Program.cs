@@ -117,10 +117,13 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseRouting();
 app.UseCors();
-app.UseMiddleware<JwtMiddleware>();
-app.UseMiddleware<FileValidationMiddleware>();
+
 app.UseMiddleware<ApiResponseMiddleware>();
+app.UseMiddleware<JwtMiddleware>();
+
 app.UseAuthorization();
+
+app.UseMiddleware<FileValidationMiddleware>();
 
 app.MapControllers();
 
