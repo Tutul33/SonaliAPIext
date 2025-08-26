@@ -93,12 +93,27 @@ namespace Sonali.API.DomainService.Repository
                     true,
                     "ReferralId", "RefBy", "RefTo", "RefType", "Comments", "ReferDate", "IsActive"
                     );
-                var voucherList = DataTableHelper.DataTableToList<VoucherDtl>(_voucherData);
-                var referralList = DataTableHelper.DataTableToList<VoucherReferralDTO>(_referData);
+
+                // Filter voucherData safely
+                var voucherData = _voucherData.AsEnumerable()
+                    .Where(row => row.Field<decimal>("Id") != 0);
+
+                var voucherList = voucherData.Any()
+                    ? DataTableHelper.DataTableToList<VoucherDtl>(voucherData.CopyToDataTable())
+                    : new List<VoucherDtl>();
+
+                // Filter referralData safely
+                var referData = _referData.AsEnumerable()
+                    .Where(row => row.Field<int>("ReferralId") != 0);
+
+                var referralList = referData.Any()
+                    ? DataTableHelper.DataTableToList<VoucherReferralDTO>(referData.CopyToDataTable())
+                    : new List<VoucherReferralDTO>();
+
                 return new
                 {
-                    voucherList = voucherList.Count>0 ? voucherList : new List<VoucherDtl>(),
-                    referralList = referralList.Count>0 ? referralList : new List<VoucherReferralDTO>()
+                    voucherList,
+                    referralList
                 };
             }
             catch (Exception ex)
