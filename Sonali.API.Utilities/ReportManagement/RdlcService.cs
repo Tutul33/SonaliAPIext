@@ -28,7 +28,7 @@ namespace Sonali.API.Utilities.ReportManagement
                 localReport.ReportPath = reportPath;
 
                 // Add DataSource
-                localReport.DataSources.Add(new ReportDataSource("DataSet1", data));
+                localReport.DataSources.Add(new ReportDataSource(dataSetName, data));
 
                 // Add parameters if any
                 if (parameters != null)
