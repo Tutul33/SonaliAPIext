@@ -20,9 +20,9 @@ namespace Sonali.API.Middlewares
             try
             {
                 // Skip wrapping for static files (like images, css, js)
-                if (context.Request.Path.StartsWithSegments("/uploads") ||
-                    context.Request.Path.StartsWithSegments("/swagger") ||
-                    context.Request.Path.StartsWithSegments("/hubs/notification") ||
+                if (context.Request.Path.StartsWithSegments("/uploads") || //For Uploads, it must be skipped
+                    context.Request.Path.StartsWithSegments("/swagger") || //For swagger, it must be skipped
+                    context.Request.Path.StartsWithSegments("/hubs/notification") || //For SignalR, it must be skipped
                     Path.HasExtension(context.Request.Path))
                 {
                     await _next(context);
