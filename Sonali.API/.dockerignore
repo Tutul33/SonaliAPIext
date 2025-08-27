@@ -1,7 +1,8 @@
 **/bin/
 **/obj/
-**/node_modules/
-**/*.db
 **/*.md
 **/*.user
-**/*.vs
+**/*.suo
+Sonali.API.Tests/
+.vscode/
+.git/
