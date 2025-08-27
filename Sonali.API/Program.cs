@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Sonali.API.DomainService.Base;
+using Sonali.API.Hubs;
 using Sonali.API.Infrastructure.DAL.Base;
 using Sonali.API.Infrastructure.Data.Configurations;
 using Sonali.API.Infrastructure.Data.Data;
@@ -38,13 +39,22 @@ builder.Services.AddControllers(options =>
 {
     opts.JsonSerializerOptions.Converters.Add(new NullableDecimalConverter());
     opts.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
-}); 
+});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddDefaultPolicy(policy =>
+//        policy.AllowAnyOrigin()
+//              .AllowAnyHeader()
+//              .AllowAnyMethod());
+//});
+var angularOrigin = "http://localhost:4200";
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(angularOrigin)
               .AllowAnyHeader()
-              .AllowAnyMethod());
+              .AllowAnyMethod()
+              .AllowCredentials()); // important for SignalR
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -84,6 +94,7 @@ builder.Services.AddAutoMapper(cfg =>
 
 builder.Services.Configure<TempFileCleanupSettings>(builder.Configuration.GetSection("TempFileCleanup"));
 builder.Services.AddHostedService<TempFileCleanupService>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -118,13 +129,13 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseRouting();
 app.UseCors();
 
+app.MapHub<NotificationHub>("/hubs/notification");
 app.UseMiddleware<ApiResponseMiddleware>();
 app.UseMiddleware<JwtMiddleware>();
 
 app.UseAuthorization();
 
 app.UseMiddleware<FileValidationMiddleware>();
-
 app.MapControllers();
 
 app.Run();
