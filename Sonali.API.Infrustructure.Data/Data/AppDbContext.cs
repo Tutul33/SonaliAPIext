@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Sonali.API.Infrustructure.Data.Models;
+using Sonali.API.Infrastructure.Data.Models;
 
-namespace Sonali.API.Infrustructure.Data.Data;
+namespace Sonali.API.Infrastructure.Data.Data;
 
 public partial class AppDbContext : DbContext
 {

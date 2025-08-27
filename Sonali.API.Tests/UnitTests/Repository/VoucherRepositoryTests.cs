@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Sonali.API.Domain.DTOs;
-using Sonali.API.Infrustructure.DAL.Repository;
-using Sonali.API.Infrustructure.Data.Data;
-using Sonali.API.Infrustructure.Data.Models;
+using Sonali.API.Infrastructure.DAL.Repository;
+using Sonali.API.Infrastructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Models;
 using Sonali.API.Tests.DbFactory;
 using Xunit;
 namespace Sonali.API.Tests.UnitTests.Repository

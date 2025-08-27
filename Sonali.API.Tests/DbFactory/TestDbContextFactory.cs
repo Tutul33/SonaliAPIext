@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sonali.API.Infrustructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

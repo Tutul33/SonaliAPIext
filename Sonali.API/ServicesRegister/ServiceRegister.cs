@@ -2,7 +2,7 @@
 using Sonali.API.DomainService.DataService;
 using Sonali.API.DomainService.Interface;
 using Sonali.API.DomainService.Repository;
-using Sonali.API.Infrustructure.DAL.Repository;
+using Sonali.API.Infrastructure.DAL.Repository;
 using Sonali.API.Middlewares;
 using Sonali.API.Utilities.FileManagement;
 using Sonali.API.Utilities.ReportManagement;

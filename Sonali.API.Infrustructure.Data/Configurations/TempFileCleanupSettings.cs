@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sonali.API.Infrustructure.Data.Configurations
+namespace Sonali.API.Infrastructure.Data.Configurations
 {
     public class TempFileCleanupSettings
     {

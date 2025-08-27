@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Sonali.API.Domain.DTOs.DemoDTO;
 using Sonali.API.Domain.Entities.Demo;
 using Sonali.API.Domain.Interface;
-using Sonali.API.Infrustructure.Data.Data;
-using Sonali.API.Infrustructure.Data.Models;
+using Sonali.API.Infrastructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Models;
 using Sonali.API.Utilities.FileManagement;
 
-namespace Sonali.API.Infrustructure.DAL.Repository
+namespace Sonali.API.Infrastructure.DAL.Repository
 {
     public class DemoRepository : IDemoRepository
     {

@@ -7,7 +7,7 @@ using Sonali.API.Domain.DTOs.DemoDTO;
 using Sonali.API.Domain.Entities.Demo;
 using Sonali.API.Domain.Interface;
 using Sonali.API.DomainService.Interface;
-using Sonali.API.Infrustructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Data;
 using Sonali.API.Utilities.FileManagement;
 
 namespace Sonali.API.Controllers

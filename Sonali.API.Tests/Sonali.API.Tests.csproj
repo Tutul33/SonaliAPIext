@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sonali.API.DomainService\Sonali.API.DomainService.csproj" />
     <ProjectReference Include="..\Sonali.API.Domain\Sonali.API.Domain.csproj" />
-    <ProjectReference Include="..\Sonali.API.Infrustructure.DAL\Sonali.API.Infrustructure.DAL.csproj" />
+    <ProjectReference Include="..\Sonali.API.Infrustructure.DAL\Sonali.API.Infrastructure.DAL.csproj" />
     <ProjectReference Include="..\Sonali.API\Sonali.API.csproj" />
   </ItemGroup>
 	

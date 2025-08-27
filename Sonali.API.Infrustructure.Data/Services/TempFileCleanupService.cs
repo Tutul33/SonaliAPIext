@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Sonali.API.Infrustructure.Data.Configurations;
+using Sonali.API.Infrastructure.Data.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sonali.API.Infrustructure.Data.Services
+namespace Sonali.API.Infrastructure.Data.Services
 {
     public class TempFileCleanupService : BackgroundService
     {

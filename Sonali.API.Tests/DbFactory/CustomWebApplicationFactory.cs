@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Sonali.API.Domain.DTOs;
 using Sonali.API.DomainService.Interface;
-using Sonali.API.Infrustructure.Data.Data;
-using Sonali.API.Infrustructure.Data.Models;
+using Sonali.API.Infrastructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Models;
 using System.Linq;
 
 namespace Sonali.API.Tests.DbFactory

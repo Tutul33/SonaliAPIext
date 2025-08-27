@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Sonali.API.Domain.DTOs;
 using Sonali.API.Domain.Interface;
-using Sonali.API.Infrustructure.Data.Data;
+using Sonali.API.Infrastructure.Data.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sonali.API.Infrustructure.DAL.Repository
+namespace Sonali.API.Infrastructure.DAL.Repository
 {
     public class LoginRepository : ILoginRepository
     {
