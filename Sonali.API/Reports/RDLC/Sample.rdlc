@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet1">
+    <DataSet Name="Sp_DataPrint">
       <Query>
         <DataSourceName>NewDataSet</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
@@ -196,7 +196,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet1</DataSetName>
+            <DataSetName>Sp_DataPrint</DataSetName>
             <Top>0.27083in</Top>
             <Left>0.17583in</Left>
             <Height>0.5in</Height>

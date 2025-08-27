@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Reports\RDLC\DemoReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Reports\RDLC\Sample.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
