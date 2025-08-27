@@ -1,20 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Sonali.API.Domain.DTOs;
 using Sonali.API.Domain.DTOs.DemoDTO;
-using Sonali.API.Domain.Entities;
 using Sonali.API.Domain.Entities.Demo;
 using Sonali.API.Domain.Interface;
 using Sonali.API.Infrustructure.Data.Data;
 using Sonali.API.Infrustructure.Data.Models;
 using Sonali.API.Utilities.FileManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sonali.API.Infrustructure.DAL.Repository
 {
