@@ -59,13 +59,13 @@
                   <Width>2.01125in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.71667in</Width>
+                  <Width>1.20625in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.0575in</Width>
+                  <Width>1.0575in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.21667in</Width>
+                  <Width>1.28959in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.66458in</Width>
@@ -404,9 +404,9 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>sp_GetVoucherApprovalList</DataSetName>
-            <Top>0.06125in</Top>
+            <Top>0.09875in</Top>
             <Height>0.5in</Height>
-            <Width>9.66667in</Width>
+            <Width>7.22917in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -414,13 +414,13 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>0.625in</Height>
+        <Height>0.71875in</Height>
         <Style />
       </Body>
-      <Width>9.66667in</Width>
+      <Width>7.22917in</Width>
       <Page>
         <PageHeader>
-          <Height>0.34375in</Height>
+          <Height>0.45833in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -442,7 +442,7 @@
               <Top>0.03833in</Top>
               <Left>2.4675in</Left>
               <Height>0.25in</Height>
-              <Width>1in</Width>
+              <Width>1.8075in</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
