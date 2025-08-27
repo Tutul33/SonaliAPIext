@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sonali.API.Infrustructure.Data\Sonali.API.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Sonali.API.Infrastructure.Data\Sonali.API.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\Sonali.API.Utilities\Sonali.API.Utilities.csproj" />
   </ItemGroup>
 

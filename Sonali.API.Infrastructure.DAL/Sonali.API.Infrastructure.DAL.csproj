@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sonali.API.Domain\Sonali.API.Domain.csproj" />
-    <ProjectReference Include="..\Sonali.API.Infrustructure.Data\Sonali.API.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\Sonali.API.Infrastructure.Data\Sonali.API.Infrastructure.Data.csproj" />
   </ItemGroup>
 
 </Project>
