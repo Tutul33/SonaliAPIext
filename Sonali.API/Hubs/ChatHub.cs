@@ -55,5 +55,19 @@ namespace Sonali.API.Hubs
             //await Clients.Caller.SendAsync("MessageSent", msg.Id, msg.SentAt);
             return Task.CompletedTask;
         }
+        public Task SendPrivateFile(string sender, string receiver, FileMessage fileMessage)
+        {
+            if (userConnections.TryGetValue(receiver, out var connId))
+            {
+                return Clients.Client(connId).SendAsync("ReceiveFile", sender, fileMessage);
+            }
+            return Task.CompletedTask;
+        }
+    }
+    public class FileMessage
+    {
+        public string FileName { get; set; } = string.Empty;
+        public string FileType { get; set; } = string.Empty;
+        public string FileData { get; set; } = string.Empty; // Base64
     }
 }
