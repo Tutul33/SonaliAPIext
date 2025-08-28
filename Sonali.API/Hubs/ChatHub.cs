@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.ServiceModel.Channels;
 
 namespace Sonali.API.Hubs
 {
@@ -34,11 +35,24 @@ namespace Sonali.API.Hubs
 
         public Task SendPrivateMessage(string sender, string receiver, string message)
         {
+            // 1️⃣ Save to DB (if needed)
+            //var msg = new Message
+            //{
+            //    Sender = sender,
+            //    Receiver = receiver,
+            //    Text = message,
+            //    SentAt = DateTime.UtcNow
+            //};
+
+            //_db.Messages.Add(msg);
+            //await _db.SaveChangesAsync();
+
             if (userConnections.TryGetValue(receiver, out var connId))
             {
                 return Clients.Client(connId).SendAsync("ReceiveMessage", sender, message);
             }
-
+            // 3️⃣ (Optional) Send ack back to sender
+            //await Clients.Caller.SendAsync("MessageSent", msg.Id, msg.SentAt);
             return Task.CompletedTask;
         }
     }
