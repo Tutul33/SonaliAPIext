@@ -9,9 +9,9 @@ namespace Sonali.API.Controllers
     [ApiController]
     public class NotifyController : ControllerBase
     {
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public NotifyController(IHubContext<NotificationHub> hubContext)
+        public NotifyController(IHubContext<ChatHub> hubContext)
         {
             _hubContext = hubContext;
         }

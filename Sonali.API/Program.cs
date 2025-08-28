@@ -129,7 +129,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseRouting();
 app.UseCors();
 
-app.MapHub<NotificationHub>("/hubs/notification");
+app.MapHub<ChatHub>("/chathub");
 app.UseMiddleware<ApiResponseMiddleware>();
 app.UseMiddleware<JwtMiddleware>();
 
